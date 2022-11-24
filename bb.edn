@@ -1,0 +1,12 @@
+{:min-bb-version "0.9.159"
+ :tasks
+ {build:cljs {:doc "Builds JS"
+              :task (clojure "-M:sci:shadow release sci")}
+
+  build:clerk {:doc "Builds a static app with default notebooks"
+               :task (clojure "-X:nextjournal/clerk")}
+
+  build {:doc "Publish task which will be run on CI"
+         :depends [build:cljs build:clerk]}
+
+  dev {:task (clojure "-X:sci:shadow:dev")}}}

@@ -1,0 +1,12 @@
+node_modules
+.idea
+.cpcache
+.shadow-cljs
+
+*.iml
+.nrepl-port
+.DS_Store
+out
+build
+.clerk
+public
