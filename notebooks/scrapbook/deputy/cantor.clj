@@ -1,5 +1,5 @@
 ;; # ⋰⋰⋰ Cantor Theorem ⋰⋰⋰
-(ns deputy.cantor
+(ns scrapbookdeputy.cantor
   (:refer-clojure :exclude [set])
   (:require
    [deputy.core :as d :refer [defterm]]
@@ -7,15 +7,16 @@
    ;; labels need to be required before bottom, throws otherwise
    [deputy.extensions.labels]
    [deputy.stdlib.bottom :refer [bottom]]
-   [deputy.equality :refer [l=] :as eq]
+   [scrapbook.deputy.equality :refer [l=] :as eq]
    [nextjournal.clerk :as clerk]))
 
 ;; Here's my all-time favourite hello-world for dependently typed languages: **Cantor theorem**!
 ;; This theorem is short but touches:
-;; * Universal / Existential quantifiers
+;; * Universal / Existential quantification
 ;; * Leibniz equality: indiscernibility of equals (defined in `scratch.deputy.equality`)
-;; * Principle of non-contradiction
-;; * The ambiguity between types and sets
+;; * The Principle of non contradiction (no need for the excluded middle)
+;; * The ambiguity between types and sets,
+;; * Sets as predicates
 ;;
 ;; We'll be using the principle of non-cotradiction (note! we won't use the excluded middle)
 ;; hence we need a definition of not-a-type.
@@ -40,7 +41,7 @@
 (defterm [surjective [A :type] [B :type] [f (=> A B)] :type]
   (∀ [b B] (∃ [a A] (l= B (f a) b))))
 
-;; And here the celeberrimus diagonal-avoiding beautiful trick anno 1891. Poor Brouwer!
+;; And here the celeberrimus diagonal-avoiding beautiful trick anno 1891. Poor Brouwer: intuitionistic machinary subjected to his friend's argument!
 (defterm [anti-diagonal [T :type] [f (=> T (set T))] (set T)]
   (fun [x] (¬ (∈ T x (f x)))))
 

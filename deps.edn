@@ -32,5 +32,5 @@
   {:jvm-opts ["-Dclojure.main.report=stdout"]
    :exec-fn nextjournal.clerk/build!
    :exec-args {:git/url "https://github.com/zampino/scrapbook"
-               :paths ["notebooks/deputy/**.clj"]
+               :paths ["notebooks/scrapbook/deputy/**.clj"]
                :browse false}}}}

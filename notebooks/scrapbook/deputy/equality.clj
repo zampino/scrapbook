@@ -1,4 +1,4 @@
-(ns deputy.equality
+(ns scrapbook.deputy.equality
   (:require
    [deputy.core :as d]
    [deputy.syntax :as s :refer :all]
