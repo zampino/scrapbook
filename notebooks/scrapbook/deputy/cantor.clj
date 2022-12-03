@@ -1,5 +1,5 @@
 ;; # ⋰⋰⋰ Cantor Theorem ⋰⋰⋰
-(ns scrapbookdeputy.cantor
+(ns scrapbook.deputy.cantor
   (:refer-clojure :exclude [set])
   (:require
    [deputy.core :as d :refer [defterm]]

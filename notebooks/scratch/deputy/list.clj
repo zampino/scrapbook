@@ -15,6 +15,8 @@
   [deputy.utils :as u :refer [ko-expr? throw-ko ok> example examples]]
   ))
 
+(defmacro compute [term] `(a/unparse (n/evaluate (s/parse ~term))))
+
 
 ;; Recursion Semantic
 ;; [A :type][B (=> A :type)][X :type] ⊢
@@ -67,12 +69,13 @@
 (d/defterm [l3 (List Nat)]
   (lcons Nat three l2))
 
-(a/unparse
- (n/evaluate (s/parse
-              (fold Nat Nat add ze l3))))
+
+(time
+ (compute (fold Nat Nat add ze l3)))
 
 
-(d/defterm [fold2
+;; We define the right fold by induction on lists
+(d/defterm [foldr
             [A :type]
             [B :type]
             [f (=> A B B)]
@@ -81,11 +84,11 @@
             B]
   (list/ind A l (λ [_] B) b (λ [a l b] (f a b))))
 
-(a/unparse
- (n/evaluate (s/parse
-              (fold2 Nat Nat add ze l3))))                  ;; => 6
+(time
+ (compute (foldr Nat Nat add ze l3)))
 
-(defmacro compute [term] `(a/unparse (n/evaluate (s/parse ~term))))
+;;
+
 
 ;; fusion
 ;; https://github.com/agda/agda-stdlib/blob/master/src/Data/List/Properties.agda

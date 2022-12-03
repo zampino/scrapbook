@@ -1,19 +1,13 @@
 {:paths ["src" "notebooks"]
  :deps
  {org.clojure/clojure {:mvn/version "1.11.1"}
-  io.github.nextjournal/clerk {#_#_ :git/sha "a2e382aa5bfd42a67142a6613a5da9b36333da98"
-                               #_#_ :local/root "../clerk"
+  io.github.nextjournal/clerk {#_#_:git/sha "a2e382aa5bfd42a67142a6613a5da9b36333da98"
+                               #_#_:local/root "../clerk"
                                :mvn/version "0.12.699"}
 
-  ;; latte proof assistant
-  io.github.latte-central/LaTTe {:git/sha "521d7f5e02bdec133a251d9dfbdbac6c42481eb7"}
-  io.github.latte-central/latte-prelude {:git/sha "860c3f747164686fe69296af7e4b9c5d788cf23f"
-                                         :deps/manifest :deps}
-  io.github.latte-central/latte-sets {:git/sha "d9206212a53d53513ebc4ac761be88ded4accae5"
-                                      :deps/manifest :deps}
   io.gitlab.fredokun/deputy {:deps/manifest :deps
                              :git/sha "d999fe6aa3182a121d423bd790b8ccbe7c590877"
-                             #_#_ :local/root "../deputy"}}
+                             #_#_:local/root "../deputy"}}
 
  :aliases
  {:shadow
@@ -27,6 +21,15 @@
               "-Dpolyglot.engine.WarnInterpreterOnly=false"
               "-XX:-OmitStackTraceInFastThrow"
               "-Dclojure.main.report=stdout"]}
+
+  ;; latte proof assistant
+  :latte
+  {:extra-deps
+   {io.github.latte-central/LaTTe {:git/sha "521d7f5e02bdec133a251d9dfbdbac6c42481eb7"}
+    io.github.latte-central/latte-prelude {:git/sha "860c3f747164686fe69296af7e4b9c5d788cf23f"
+                                           :deps/manifest :deps}
+    io.github.latte-central/latte-sets {:git/sha "d9206212a53d53513ebc4ac761be88ded4accae5"
+                                        :deps/manifest :deps}}}
 
   :nextjournal/clerk
   {:jvm-opts ["-Dclojure.main.report=stdout"]
