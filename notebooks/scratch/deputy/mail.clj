@@ -19,3 +19,5 @@
 (d/defterm [set [A :type] :type] (=> A :type))
 (-> set :vtype)
 ;; => {:node :pi, :domain :type, :codomain {:node :bind, :name A, :body :type}}
+
+;; 7) beware of Clerk caching

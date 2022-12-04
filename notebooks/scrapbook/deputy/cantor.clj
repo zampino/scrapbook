@@ -7,13 +7,13 @@
    ;; labels need to be required before bottom, throws otherwise
    [deputy.extensions.labels]
    [deputy.stdlib.bottom :refer [bottom]]
-   [scrapbook.deputy.equality :refer [l=] :as eq]
+   [scrapbook.deputy.equality :refer [≡] :as eq]
    [nextjournal.clerk :as clerk]))
 
 ;; Here's my all-time favourite hello-world for dependently typed languages: **Cantor theorem**!
 ;; This theorem is short but touches:
 ;; * Universal / Existential quantification
-;; * Leibniz equality: indiscernibility of equals (defined in `scratch.deputy.equality`)
+;; * Leibniz equality: indiscernibility of equals (defined in `scrapbook.deputy.equality`)
 ;; * The Principle of non contradiction (no need for the excluded middle)
 ;; * The ambiguity between types and sets,
 ;; * Sets as predicates
@@ -39,7 +39,7 @@
 
 ;; A surjective map, existence of preimages
 (defterm [surjective [A :type] [B :type] [f (=> A B)] :type]
-  (∀ [b B] (∃ [a A] (l= B (f a) b))))
+  (∀ [b B] (∃ [a A] (≡ B (f a) b))))
 
 ;; And here the celeberrimus diagonal-avoiding beautiful trick anno 1891. Poor Brouwer: intuitionistic machinary subjected to his friend's argument!
 (defterm [anti-diagonal [T :type] [f (=> T (set T))] (set T)]
@@ -55,16 +55,16 @@
   (fun [fsu]
        ;; assume we have a surjective f from T to (set T)
        (lets [[adf (set T)] (anti-diagonal T f)
-              [ex-preimg (∃ [t T] (l= (set T) (f t) adf))] (fsu adf)
+              [ex-preimg (∃ [t T] (≡ (set T) (f t) adf))] (fsu adf)
               ;; let t witness existence of a preimage
               [t T] (π1 ex-preimg)
-              [ft=adf (l= (set T) (f t) adf)] (π2 ex-preimg)
+              [ft=adf (≡ (set T) (f t) adf)] (π2 ex-preimg)
               ;; define a predicate P which describes sets not containing t
               [P (=> (set T) :type)] (fun [s] (¬ (∈ T t s)))
 
               ;; t cannot belong to the anti-diagonal of f
               [¬t∈adf (¬ (∈ T t adf))] (fun [t∈adf] (⊥-intro (∈ T t adf) t∈adf (ft=adf P t∈adf)))
-              [adf=ft (l= (set T) adf (f t))] (eq/l=-sym (set T) (f t) adf ft=adf)
+              [adf=ft (≡ (set T) adf (f t))] (eq/≡-sym (set T) (f t) adf ft=adf)
               ;; t cannot not belong to the anti-diagonal of f
               [¬¬t∈adf (¬ (¬ (∈ T t adf)))] (fun [¬t∈adf] (¬t∈adf (adf=ft P ¬t∈adf)))]
          (⊥-intro (¬ (∈ T t adf)) ¬t∈adf ¬¬t∈adf))))
