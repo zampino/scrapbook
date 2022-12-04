@@ -1,8 +1,8 @@
 ;; # 🪐 The Universality of Fold
-;; _As Clojurists we all love transducers, and we believe they shine at
+;; _As Clojurists we all love transducers, and we "believe" they shine at
 ;; delivering elegant, modular and efficient code when chained.
 ;; Their dynamics is explained by the fusion property of fold, this can be
-;; actually **proved** by means of Deputy's Dependent Types_
+;; actually **proven** by means of Deputy's Dependent Types_.
 (ns scrapbook.deputy.fold-universal
  (:require
   [deputy.ast :as a]
