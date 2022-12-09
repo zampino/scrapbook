@@ -16,23 +16,30 @@
   ))
 
 (defmacro compute [term] `(a/unparse (n/evaluate (s/parse ~term))))
+;; fixtures
+(d/defterm [l1 (List Nat)] (lcons Nat one (lnil Nat)))
+(d/defterm [l2 (List Nat)] (lcons Nat two l1))
+(d/defterm [l3 (List Nat)] (lcons Nat three l2))
 
-
-;; Recursion Semantic
-;; [A :type][B (=> A :type)][X :type] ⊢
-;; :type ∋ rec A B X
+;; ## Recursion Semantic
+;; Is this PiSigma? http://www.cs.nott.ac.uk/~psztxa/publ/pisigma-new.pdf
 ;;
-;; [A :type][B (=> A :type)][X :type][v X] ⊢
-;; rec A B X ∋ ret v
+;;    [A :type][B (=> A :type)][X :type] ⊢
+;;    :type ∋ rec A B X
 ;;
-;; [A :type][B (=> A :type)][X :type][a A][k (=> (B a) (rec A B X))] ⊢
-;; rec A B X ∋ rec-call a k
+;;    [A :type][B (=> A :type)][X :type][v X] ⊢
+;;    rec A B X ∋ ret v
 ;;
-;; [A :type][B (=> A :type)][X :type][a (rec A B X)][r (Π [a A] (B a))] ⊢
-;; (red A B X a r) ∈ X
+;;    [A :type][B (=> A :type)][X :type][a A][k (=> (B a) (rec A B X))] ⊢
+;;    rec A B X ∋ rec-call a k
 ;;
-;; [A :type][B (=> A :type)][a A][r (Π [a A] (rec A B (B a)))] ⊢
-;; (fix A B a r) ∈ (B a)
+;;    [A :type][B (=> A :type)][X :type][a (rec A B X)][r (Π [a A] (B a))] ⊢
+;;    (red A B X a r) ∈ X
+;;
+;;    [A :type][B (=> A :type)][a A][r (Π [a A] (rec A B (B a)))] ⊢
+;;    (fix A B a r) ∈ (B a)
+;;
+;; ---
 
 ;; fold : {A,B : :type} -> (f : (-> A B B)) -> B -> List A -> B
 ;; fold f b [] = b
@@ -53,6 +60,40 @@
                        (λ [a as] (r/rec-call as (λ [y] (r/ret (f a y)))))
                        ))))
 
+;; foldl : {A,B : :type} -> (f : (-> B A B)) -> B -> List A -> B
+;; foldl f b [] = b
+;; foldl f b a::as = (foldl f (f b a) as)
+;;
+;; CPS foldl
+;; (define (foldl-k f b xs kont)
+;;  (if (null? xs)
+;;      (kont b)
+;;      (f (car xs) b (lambda (v)
+;;                       (foldl-k f v (cdr xs) kont)))))
+;; continuationize f
+;; g : B -> B
+;; foldl f b as = foldr (fun [a g] (fun [y] (g (f y a))) id as b
+
+(d/try-defterm [foldl
+            [A :type]
+            [B :type]
+            [f (=> B A B)]
+            [b B]
+            [l (List A)]
+            B]
+  ((r/fix (List A) (λ [_] (=> B B)) l
+          (λ [l]
+             (List-case A l
+                        (λ [_] (r/rec (List A) (λ [_] (=> B B)) (=> B B)))
+                        (r/ret (fun [x] x))
+                        (λ [a as]
+                           (r/rec-call as (λ [y] (r/ret
+                                                  (λ [b]
+                                                     (y (f b a)))))))
+                        )))
+   b))
+
+(ex-data *e)
 
 (t/type-check Nat one)
 (t/type-check (s/parse (List Nat)) (s/parse (lcons Nat one (lnil Nat))))
@@ -60,18 +101,12 @@
 (a/unparse
  (t/type-synth (s/parse (lcons Nat one (lnil Nat)))))
 
-(d/defterm [l1 (List Nat)]
-  (lcons Nat one (lnil Nat)))
+(comment
+  (time
+   (compute (foldl Nat Nat add ze l3)))
 
-(d/defterm [l2 (List Nat)]
-  (lcons Nat two l1))
-
-(d/defterm [l3 (List Nat)]
-  (lcons Nat three l2))
-
-
-(time
- (compute (fold Nat Nat add ze l3)))
+  (time
+   (compute (fold Nat Nat add ze l3))))
 
 
 ;; We define the right fold by induction on lists

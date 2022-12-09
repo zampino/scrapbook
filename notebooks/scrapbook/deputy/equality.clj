@@ -2,17 +2,13 @@
   (:require
    [deputy.core :as d]
    [deputy.syntax :as s :refer :all]
-   [deputy.extensions.lets]))
+   [deputy.extensions.lets]
+   [scrapbook.deputy.function :refer [∘ id]]))
 
 ;; Leibniz indiscernibility of equals
 
 (d/defterm [≡ [T :type] [x T] [y T] :type]
   (Π [P (=> T :type)] (=> (P x) (P y))))
-
-(d/defterm [id [T :type] (=> T T)] (fun [x] x))
-(d/defterm [∘ [A :type] [B :type] [C :type]
-            [g (=> B C)] [f (=> A B)] (=> A C)]
-  (fun [a] (g (f a))))
 
 (d/defterm [≡-refl [T :type] [x T] (≡ T x x)]
   (fun [P] (id (P x))))
@@ -24,7 +20,6 @@
 
 (d/defterm [≡-trans [T :type] [x T] [y T] [z T]
             [x=y (≡ T x y)] [y=z (≡ T y z)] (≡ T x z)]
-  #_ (fun [P Px] (y=z P (x=y P Px)))
   (fun [P] (∘ (P x) (P y) (P z) (y=z P) (x=y P))))
 
 (d/defterm [≡-cong [A :type] [B :type]
