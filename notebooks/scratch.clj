@@ -6,5 +6,4 @@
 
 
 (comment
-
   (nextjournal.clerk/show! 'scratch))

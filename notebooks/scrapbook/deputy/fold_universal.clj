@@ -17,6 +17,7 @@
 
 (defmacro compute [term] `(a/unparse (n/evaluate (s/parse ~term))))
 (s/defparse ∀ ::s/pi)
+(s/defparse ∃ ::s/sigma)
 
 ;; Our friends at Agda have some structural-recursion sugar in their definitions:
 ;;
@@ -25,6 +26,7 @@
 ;;    foldr f b a::as = f a (fold f b as)
 ;;
 ;; while Deputy inductive lists come equipped with an induction/recursion (? terminology) helper by means of which we can define the right fold as
+
 (defterm [foldr [A :type][B :type]
           [f (=> A B B)][b B]
           [l (List A)] B]
@@ -66,9 +68,8 @@
 
 
 ;; Now given a left-action $f$ of $A$ on $B$, any arbitrary function of lists satisfying $\textsf{(U1)}$ and $\textsf{(U2)}$ above is actually a fold!
-(defterm [foldr-universal [A :type] [B :type]
+(defterm [foldr-universal [A :type] [B :type][f (=> A B B)][b B]
           [h (=> (List A) B)]
-          [f (=> A B B)] [b B]
           [u1 (≡ B (h (lnil A)) b)]
           [u2 (∀ [a A]
                  (∀ [as (List A)]
@@ -111,18 +112,87 @@
           (≗ (List A) C
              (∘ (List A) B C m (foldr A B f b))
              (foldr A C g (m b)))]
-  (foldr-universal A C
+  (foldr-universal A C g (m b)
                    (∘ (List A) B C m (foldr A B f b))
-                   g (m b)
                    (eq/≡-refl C (m b))
                    (fun [a as] (m-morph a (foldr A B f b as)))))
 
-;; **TODO**: show clojure transducers as an example of fold
+;; map
+
+(defterm [map [A :type][B :type]
+          [f (=> A B)] [as (List A)] (List B)]
+  (list/ind A as (λ [_] (List B)) (lnil B) (λ [a as fas] (lcons B (f a) fas))))
+
+;; surprise: map is fold nauturally
+(defterm [map-is-fold [A :type] [B :type] [f (=> A B)]
+          (≗ (List A) (List B)
+             (map A B f)
+             (foldr A (List B) (fun [a bs] (lcons B (f a) bs)) (lnil B)))]
+  (foldr-universal
+   A (List B) (fun [a bs] (lcons B (f a) bs)) (lnil B)
+   (map A B f)
+   (eq/≡-refl (List B) (lnil B))
+   (fun [a as] (eq/≡-refl (List B) (map A B f (lcons A a as))))))
+
+;; left actions
+(defterm [Act [A :type] [B :type] :type] (=> A B B))
+(defterm [End [X :type] :type] (=> X X))
+
+#_
+(defterm [map-xf [A :type] [B :type] [f (=> A B)] (End (Act A (List B)))]
+  (fun [r]
+       (fun [a bs] (lcons B (f a) bs))))
+
+#_
+(defterm [cons-xf [T :type] (Act T (List T))] (lcons T))
+
+
+#_
+(defterm [transducer-lemma [A :type] [B :type] [xf (End (Act A (List B)))] [bs (List B)]
+          [r (Act A (List B))]
+
+          (≗ (List B) (List B)
+             (∘ (List A) (List B) (List B)
+                (fold A (List B) bs r)
+                (fold B (List B) (xf (lcons B))))
+             (fold A (List B) (xf r)))])
+
+
+#_(defterm [map-transducer-lemma [A :type] [B :type] [f (=> A B)] [bs (List B)]
+            [r (Act A (List B))]
+            (≗ (List B) (List B)
+               (∘ (List A) (List B) (List B)
+                  (fold A (List B) bs r)
+                  (map A B f))
+               (fold A (List B) (map-xf r)))])
+
+;; transducer lemma
+;; (map-xf f) : r |→ λ a bs (r (f a) bs)
+;;  r ∈ (Act A (List B))
+;; fold g ∘ map f ≗ fold ((map-xf f) r)
+
+;; fold (g r) is morphism from ((∘ g f) r) to (f r)
+;;(∀ [a A]
+;;   (∀ [bs (List B)]
+;;      (≡ (List B) ((fold (g r)) (((∘ g f) r) a bs))
 ;;
-;; **TODO**: show left fold, can we define `foldl` directly in `(rec A B X)` semantics? Does tail-recursiveness fit into that pattern?
+;;                   ((f r) a ((fold (g r)) bs)))))
 ;;
-;; ## References
-;; [Hutton] https://www.cs.nott.ac.uk/~pszgmh/fold.pdf
+
+
 (comment
   (clerk/clear-cache!)
   (ex-data *e))
+
+;; **TODO**: show map and filter are folds
+;; **TODO**: show clojure transducers as an example of fold
+;;
+;; **TODO**: show left fold from right-fold, can we define `foldl` directly in `(rec A B X)` semantics? Does tail-recursiveness fit into that pattern?
+;;
+;; ## References
+;; [Hutton] https://www.cs.nott.ac.uk/~pszgmh/fold.pdf
+#_
+(defterm [transducer-lemma [A :type] [B :type]
+          [f (End (Act A (List B)))] [g (End (Act A (List B)))]
+          [r (Act A (List B))]
+          ])

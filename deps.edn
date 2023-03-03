@@ -1,10 +1,14 @@
 {:paths ["src" "notebooks"]
  :deps
  {org.clojure/clojure {:mvn/version "1.11.1"}
-  io.github.nextjournal/clerk {#_#_:git/sha "a2e382aa5bfd42a67142a6613a5da9b36333da98"
+  io.github.nextjournal/clerk {:git/sha "2997b268fcf753e8a338db6cf2a00c0755e25ed3"
                                #_#_:local/root "../clerk"
-                               :mvn/version "0.12.699"}
+                               #_#_ :mvn/version "0.12.699"}
 
+  ;; box/arrow graphs
+  arrowic/arrowic {:mvn/version "0.1.1"}
+
+  ;; dependent types for you!
   io.gitlab.fredokun/deputy {:deps/manifest :deps
                              :git/sha "d999fe6aa3182a121d423bd790b8ccbe7c590877"
                              #_#_:local/root "../deputy"}}
@@ -35,5 +39,5 @@
   {:jvm-opts ["-Dclojure.main.report=stdout"]
    :exec-fn nextjournal.clerk/build!
    :exec-args {:git/url "https://github.com/zampino/scrapbook"
-               :paths ["notebooks/scrapbook/deputy/**.clj"]
+               :paths ["notebooks/scrapbook/**/*.clj"]
                :browse false}}}}
