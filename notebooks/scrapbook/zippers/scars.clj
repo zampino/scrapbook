@@ -85,9 +85,9 @@
                          (swap! !state assoc :tmr (js/setInterval (fn [_] (swap! !state update :idx (comp #(mod % frame-count) inc))) 500))
                          (and (not reel?) tmr)
                          (do (js/clearInterval tmr) (swap! !state assoc :tmr nil :idx 0)))
-                       [:div.flex.items-left
+                       [:div.flex.flex-col
                         [:div.flex.mr-5 {:style {:font-size "1.5rem"}}
-                         [:div.cursor-pointer {:on-click #(swap! !state update :reel? not)} ({true "⏹" false "▶️"} reel?)]]
+                         [:div.border.rounded-full.font-sf.text-xs.cursor-pointer.px-2.py-1.mb-2 {:on-click #(swap! !state update :reel? not)} ({true "⏹ stop" false "▶︎ play"} reel?)]]
                         [nextjournal.clerk.viewer/html (frames (if reel? idx (dec frame-count)))]])))})
   (defn reset-reel [zloc] (vary-meta zloc assoc :frames [] :cut? false))
   (defn add-frame [zloc] (vary-meta zloc update :frames (fnil conj []) zloc))
@@ -157,7 +157,7 @@
 (defn zip-down-memo [[node path :as loc]]
   (when (zip/branch? loc)
     (let [children (zip/children loc)]
-      (with-meta [(.node children)
+      (with-meta [(.-node children)
                   {:l (.-left children)
                    :ppath path
                    :pnodes (if path (conj (:pnodes path) node))
