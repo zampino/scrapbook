@@ -2,7 +2,7 @@
 (ns scrapbook.tests
   {:nextjournal.clerk/no-cache true}
   (:require [nextjournal.clerk :as clerk]
-            [clojure.test :refer :all :as t]
+            [clojure.test :refer [use-fixtures deftest] :as t]
             [nextjournal.clerk.viewer :as v]
             [clojure.string :as str]))
 
@@ -23,13 +23,14 @@
       (update @!wv
               :nextjournal/value
               assoc
-              :toc-visibility :show
+              ;; TODO: :toc-visibility :show
               :toc {:children (into []
                                     (map (fn [[k v]] {:content [{:text (str (str/capitalize (name k)) ": " v)}]}))
                                     @report-counters)}))))
 
 (defn guard [p v] (when (p v) v))
-(defn run-test-var+report [{:as wv {:keys [result] ::v/keys [doc]} :nextjournal/value}]
+(defn run-test-var+report [{:as wv {::v/keys [result doc]} :nextjournal/value}]
+  (println :wv (keys (:nextjournal/value wv)))
   (if-some [test-var (guard (comp :test meta) (-> result v/->value ::clerk/var-from-def))]
     (let [report-str-writer (java.io.StringWriter.)]
       ;; test effect
@@ -37,8 +38,7 @@
       (binding [clojure.test/*test-out* report-str-writer]
         ((:each-fixtures doc)
          (fn [] (clojure.test/test-var test-var))))
-      (assoc-in wv
-                [:nextjournal/value :result :nextjournal/value]
+      (assoc-in wv [:nextjournal/value ::v/result :nextjournal/value]
                 (v/html (if-some [failure-report (not-empty (str report-str-writer))]
                           [:pre.border-8.border-red-300 failure-report]
                           [:h3 "✅ " [:em.text-green-600 "passed!"]]))))
@@ -57,7 +57,10 @@
 ;; This is a notebook with usual test setup and assertions
 (def exhibits (atom []))
 
-(defn populate-museum [t] (swap! exhibits conj "🦖" "🦕") (t) (swap! exhibits (comp pop pop)))
+(defn populate-museum [t]
+  (swap! exhibits conj "🦖" "🦕")
+  (t)
+  (swap! exhibits (comp pop pop)))
 
 (use-fixtures :once populate-museum)
 
