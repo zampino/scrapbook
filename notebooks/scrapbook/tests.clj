@@ -2,7 +2,7 @@
 (ns scrapbook.tests
   {:nextjournal.clerk/no-cache true}
   (:require [nextjournal.clerk :as clerk]
-            [clojure.test :refer [use-fixtures deftest] :as t]
+            [clojure.test :refer [use-fixtures deftest testing is] :as t]
             [nextjournal.clerk.viewer :as v]
             [clojure.string :as str]))
 
