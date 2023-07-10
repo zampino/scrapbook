@@ -13,7 +13,7 @@
    [scrapbook.deputy.equality :refer [≡] :as eq]
    [nextjournal.clerk :as clerk]))
 
-;; My favourite hello-world proof for dependently typed languages is [Cantor theorem]().
+;; My favourite hello-world proof for dependently typed languages is [Cantor theorem](https://en.wikipedia.org/wiki/Cantor's_theorem).
 ;; The proof of the theorem is short but touches:
 ;; * Universal and Existential quantification
 ;; * Leibniz equality or _the indiscernibility of equals_ (defined in `scrapbook.deputy.equality`)
@@ -44,7 +44,7 @@
 (defterm [surjective [A :type] [B :type] [f (=> A B)] :type]
   (∀ [b B] (∃ [a A] (≡ B (f a) b))))
 
-;; And here the celeberrimus diagonal-avoiding beautiful trick anno 1891. Poor Brouwer: intuitionistic machinery subjected to his friend's argument!
+;; And here the celeberrimus diagonal-avoiding beautiful trick anno 1891.
 (defterm [anti-diagonal [T :type] [f (=> T (set T))] (set T)]
   (fun [x] (¬ (∈ T x (f x)))))
 
