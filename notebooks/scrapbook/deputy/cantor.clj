@@ -1,4 +1,7 @@
 ;; # ⋰⋰⋰ Cantor Theorem ⋰⋰⋰
+;; _This short article shows some features from [Deputy](https://gitlab.com/fredokun/deputy), a dependentyly-typed language
+;; embedded in clojure by Frederic Peschanski and Pierre-Evariste Dagand._
+
 (ns scrapbook.deputy.cantor
   (:refer-clojure :exclude [set])
   (:require
@@ -10,16 +13,16 @@
    [scrapbook.deputy.equality :refer [≡] :as eq]
    [nextjournal.clerk :as clerk]))
 
-;; Here's my all-time favourite hello-world for dependently typed languages: **Cantor theorem**!
-;; This theorem is short but touches:
-;; * Universal / Existential quantification
-;; * Leibniz equality: indiscernibility of equals (defined in `scrapbook.deputy.equality`)
-;; * The Principle of non contradiction (no need for the excluded middle)
+;; My favourite hello-world proof for dependently typed languages is [Cantor theorem]().
+;; The proof of the theorem is short but touches:
+;; * Universal and Existential quantification
+;; * Leibniz equality or _the indiscernibility of equals_ (defined in `scrapbook.deputy.equality`)
+;; * The _principle of non contradiction_ (no need for the excluded middle)
 ;; * The ambiguity between types and sets,
 ;; * Sets as predicates
 ;;
-;; We'll be using the principle of non-cotradiction (note! we won't use the excluded middle)
-;; hence we need a definition of not-a-type.
+;; We'll be using the principle of non-cotradiction
+;; hence we need to define the negation of a proposition.
 
 #_ (defdata ⊥ "The empty data type" [])
 
@@ -41,7 +44,7 @@
 (defterm [surjective [A :type] [B :type] [f (=> A B)] :type]
   (∀ [b B] (∃ [a A] (≡ B (f a) b))))
 
-;; And here the celeberrimus diagonal-avoiding beautiful trick anno 1891. Poor Brouwer: intuitionistic machinary subjected to his friend's argument!
+;; And here the celeberrimus diagonal-avoiding beautiful trick anno 1891. Poor Brouwer: intuitionistic machinery subjected to his friend's argument!
 (defterm [anti-diagonal [T :type] [f (=> T (set T))] (set T)]
   (fun [x] (¬ (∈ T x (f x)))))
 
