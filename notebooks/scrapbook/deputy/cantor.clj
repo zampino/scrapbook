@@ -50,9 +50,9 @@
 
 ^{::clerk/visibility {:code :hide}}
 (clerk/html
- [:blockquote.text-xl
-  [:span.font-sans.text-bold "Cantor Theorem:"]
-  [:em.ml-2 "There is no surjective function from a set to its powerset!"]])
+  [:div.text-xl
+   [:span.font-sans.font-bold "Cantor Theorem:"]
+   [:em.ml-1.font-sans "There is no surjective function from a set to its powerset."]])
 
 (defterm [cantor-theorem [T :type] [f (=> T (set T))] (¬ (surjective T (set T) f))]
   (fun [fsu]

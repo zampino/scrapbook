@@ -35,7 +35,10 @@
     io.github.latte-central/latte-sets {:git/sha "d9206212a53d53513ebc4ac761be88ded4accae5"
                                         :deps/manifest :deps}}}
 
-  :nextjournal/garden {:exec-fn nextjournal.clerk/serve!}
+  :nextjournal/garden
+  {:exec-fn ops/boot
+   :extra-paths ["ops"]
+   :extra-deps {nrepl/nrepl {:mvn/version "1.0.0"}}}
 
   :nextjournal/clerk
   {:jvm-opts ["-Dclojure.main.report=stdout"]

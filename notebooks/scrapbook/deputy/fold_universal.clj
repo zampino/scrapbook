@@ -39,8 +39,9 @@
 {::clerk/visibility {:result :show}}
 
 ;; computing a fold might take some time :-)
-(clerk.eval/time-ms
- (compute (foldr Nat Nat add ze l3)))
+(comment
+  (clerk.eval/time-ms
+    (compute (foldr Nat Nat add ze l3))))
 
 ;; ## Fold Universality
 
