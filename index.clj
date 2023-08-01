@@ -1,8 +1,7 @@
 (ns scrapbook
   {:nextjournal.clerk/visibility {:code :hide}
    :nextjournal.clerk/no-cache true}
-  (:require [clojure.java.io :as io]
-            [nextjournal.clerk :as clerk]))
+  (:require [nextjournal.clerk :as clerk]))
 
 (clerk/html
   {::clerk/width :full}
