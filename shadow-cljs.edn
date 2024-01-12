@@ -1,5 +1,4 @@
 {:nrepl {:cider false}
- :dev-http {9000 {:roots ["public" "classpath:public"]}}
  :builds
  {:sci
   {:target :esm
@@ -7,4 +6,4 @@
    :output-dir "public/js"
    :release {:output-dir "public/build/js"}
    :modules {:viewer {:entries [scrapbook.sci-ext]}}
-   :js-options {:output-feature-set :es8}}}}
+   :js-options {:output-feature-set :es2021}}}}

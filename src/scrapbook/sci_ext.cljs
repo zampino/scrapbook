@@ -1,12 +1,8 @@
 (ns scrapbook.sci-ext
-  (:require [nextjournal.clerk.sci-env :as se]
+  (:require [nextjournal.clerk.sci-env]
+            [sci.ctx-store]
+            ["ts-geometric-algebra" :as ga]
+            [applied-science.js-interop :as j]
             [sci.core :as sci]))
 
-(swap! se/!sci-ctx sci/merge-opts {:namespaces {'scrapbook {'hello "scrap-me"}}})
-
-(js/console.log :ehllo )
-
-(comment
- (js/console.log :ehllo )
- (do @se/!sci-ctx)
- )
+(sci.ctx-store/swap-ctx! sci/merge-opts {:classes {'ga ga}})

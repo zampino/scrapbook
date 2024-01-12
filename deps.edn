@@ -1,8 +1,9 @@
 {:paths ["src" "notebooks"]
  :deps
  {org.clojure/clojure {:mvn/version "1.11.1"}
-  io.github.nextjournal/clerk {:git/sha "90ec95dadc48a6d53e1156fc7e4fb2b6959f1c9b"
-                               #_#_:local/root "../clerk"
+  ;; clerk with SCI eval
+  io.github.nextjournal/clerk {:git/sha "b12aad2afe45690ecfd1b2619025cb0fab2dc77f"
+                               #_#_ :local/root "../clerk"
                                #_#_ :mvn/version "0.12.699"}
 
   ;; box/arrow graphs
@@ -14,13 +15,12 @@
                              #_#_:local/root "../deputy"}}
 
  :aliases
- {:shadow
-  {:extra-deps {thheller/shadow-cljs {:mvn/version "2.20.2"}}
-   :main-opts ["-m" "shadow.cljs.devtools.cli"]}
-
-  :dev
+ {:sci
   {:extra-paths ["dev"]
    :exec-fn scrapbook/dev
+   :extra-deps {io.github.nextjournal/clerk.render {:git/url "https://github.com/nextjournal/clerk"
+                                                    :git/sha "b12aad2afe45690ecfd1b2619025cb0fab2dc77f"
+                                                    :deps/root "render"}}
    :jvm-opts ["-Dclerk.resource_manifest={\"/js/viewer.js\" \"/js/viewer.js\"}"
               "-Dpolyglot.engine.WarnInterpreterOnly=false"
               "-XX:-OmitStackTraceInFastThrow"
