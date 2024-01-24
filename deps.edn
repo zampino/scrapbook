@@ -38,8 +38,7 @@
   :nextjournal/garden
   {:exec-fn ops/boot
    :jvm-opts ["-Dclojure.main.report=stdout"]
-   :extra-paths ["ops"]
-   :extra-deps {nrepl/nrepl {:mvn/version "1.0.0"}}}
+   :extra-paths ["ops"]}
 
   :nextjournal/clerk
   {:jvm-opts ["-Dclojure.main.report=stdout"]
