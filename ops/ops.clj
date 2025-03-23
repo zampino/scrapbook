@@ -6,6 +6,8 @@
             [nextjournal.clerk.webserver :as webserver]))
 
 (def sha (-> (sh "git" "rev-parse" "--short" "HEAD" :out :string) :out str/trim))
+(comment
+  (reset! nextjournal.clerk.webserver/!doc nil))
 
 (defn header [{:as opts :keys [nav-path]}]
   (clerk/html [:div.viewer.w-full.max-w-prose.px-8.not-prose.mt-3

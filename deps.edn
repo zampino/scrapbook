@@ -1,10 +1,12 @@
 {:paths ["src" "notebooks"]
  :deps
- {org.clojure/clojure {:mvn/version "1.11.1"}
+ {org.clojure/clojure {:mvn/version "1.12.0"}
   ;; clerk with SCI eval
-  io.github.nextjournal/clerk {:git/sha "b12aad2afe45690ecfd1b2619025cb0fab2dc77f"
-                               #_#_ :local/root "../clerk"
+  io.github.nextjournal/clerk {#_#_ :git/sha "2f098e1b78c2cbf961b8d3633c98cdcdd6640e21"
+                               :local/root "../clerk"
                                #_#_ :mvn/version "0.12.699"}
+
+  missionary/missionary {:mvn/version "b.39"}
 
   ;; box/arrow graphs
   arrowic/arrowic {:mvn/version "0.1.1"}
@@ -15,7 +17,10 @@
                              #_#_:local/root "../deputy"}}
 
  :aliases
- {:sci
+ {:clerk-cljs
+  {:extra-deps {io.github.nextjournal/clerk {:git/sha "0c30c73459c5b66bc6ae0efc65513d32d1009958"}}}
+
+  :sci
   {:extra-paths ["dev"]
    :exec-fn scrapbook/dev
    :extra-deps {io.github.nextjournal/clerk.render {:git/url "https://github.com/nextjournal/clerk"
